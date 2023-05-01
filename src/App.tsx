@@ -60,17 +60,6 @@ function App() {
         `${params.row.productOrderStatus || "배송중"} `,
     },
     {
-      field: "address",
-      headerName: "수령자 배송 주소",
-      type: "string",
-      width: 800,
-      editable: false,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.addressBase + params.row.addressDetail} 우편번호(${
-          params.row.zipcode
-        }) `,
-    },
-    {
       field: "invoiceNo",
       headerName: "송장번호",
       type: "string",
