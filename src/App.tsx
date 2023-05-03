@@ -20,6 +20,7 @@ function App() {
     open: false,
     reason: "",
   });
+  const [naverLogin, setNaverLogin] = useState<boolean>(false);
   const columns: GridColDef[] = [
     {
       field: "orderName",
@@ -117,12 +118,6 @@ function App() {
         const deliveryAmt = params.row.deliveryAmt;
         return `${settlementExpectAmount - payAmt - deliveryAmt}원`;
       },
-
-      // valueSetter: (params: GridValueSetterParams) => {
-      //   const deliveryAmt = params.value;
-      //   params.row["deliveryAmt"] = deliveryAmt;
-      //   return { ...params.row };
-      // },
     },
 
     {
@@ -131,7 +126,6 @@ function App() {
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 300,
-
       renderCell: (params) => (
         <>
           <strong>
@@ -196,6 +190,11 @@ function App() {
       .then((response) => {
         setOrder(response.data);
       });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/smart-store/newOrder`)
+      .catch(() => {
+        setNaverLogin(true);
+      });
   }
 
   async function getNewOrder() {
@@ -210,8 +209,6 @@ function App() {
   }
 
   async function updateOrderInfo(orderInfo: OrderResponse) {
-    console.log(orderInfo);
-
     try {
       const data = await axios.put(
         `${process.env.REACT_APP_API_URL}/smart-store/update/orderInfo`,
@@ -269,6 +266,15 @@ function App() {
       setOpen({ result: "error", open: true, reason: "발송처리" });
     }
   }
+
+  async function login() {
+    try {
+      await axios.get(`${process.env.REACT_APP_API_URL}/naver/login/ship`);
+      setOpen({ result: "success", open: true, reason: "로그인" });
+    } catch (e) {
+      setOpen({ result: "error", open: true, reason: "발송처리" });
+    }
+  }
   useEffect(() => {
     getOrderInfo();
   }, [open]);
@@ -277,17 +283,33 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>슴무트수토우 주문 및 배송현황</h1>
+        <div className="smartstore_btn">
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            style={{ margin: 16, fontSize: 30 }}
+            onClick={getNewOrder}
+          >
+            스마트 스토어 주문수집
+          </Button>
+
+          {naverLogin ? (
+            <Button
+              color="warning"
+              size="large"
+              variant="contained"
+              onClick={login}
+              style={{ margin: 16, fontSize: 30 }}
+            >
+              Naver Login
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
       </header>
       <div className="App-center">
-        <Button
-          color="primary"
-          size="large"
-          variant="contained"
-          style={{ marginLeft: 16 }}
-          onClick={getNewOrder}
-        >
-          주문수집
-        </Button>
         <Box sx={{ height: "  80%", width: "100%" }}>
           <DataGridPro
             sx={{ fontSize: "2rem" }}
@@ -301,18 +323,10 @@ function App() {
             rows={order}
             columns={columns}
             initialState={{
-              pinnedColumns: {
-                left: ["orderName", "receiverPhone", "pcc", "productName"],
-              },
               pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
+                paginationModel: { pageSize: 25, page: 0 },
               },
             }}
-            pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
           />
         </Box>
         <MuiSnackBar open={open} setOpen={setOpen} />
