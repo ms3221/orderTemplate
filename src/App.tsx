@@ -166,7 +166,7 @@ function App() {
         <>
           <strong>
             <Button
-              disabled={params.row.orderStatus === "DELIVERING" ? true : false}
+              disabled={params.row.invoiceNo ? true : false}
               size="large"
               color="primary"
               variant="contained"
