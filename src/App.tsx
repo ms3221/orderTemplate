@@ -317,9 +317,9 @@ function App() {
               updateOrderInfo(data.row);
             }}
             rowHeight={300}
-            onCellClick={(params) => {
-              handleClick(params);
-            }}
+            // onCellClick={(params) => {
+            //   handleClick(params);
+            // }}
             rows={order}
             columns={columns}
             initialState={{
