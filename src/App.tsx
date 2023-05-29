@@ -30,6 +30,7 @@ function App() {
       renderCell: (params) => (
         <>
           <div className="first_tap">
+            <div>{params.value.openmarket}</div>
             <div>구매자 이름 : {params.row.orderName}</div>
             <div>구매자 phone : {params.row.orderMemberTel}</div>
             <div>수령자 이름 : {params.row.receiverName}</div>
@@ -64,12 +65,13 @@ function App() {
       field: "invoiceNo",
       headerName: "송장번호",
       type: "string",
-      width: 200,
+      width: 300,
       editable: true,
       valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.invoiceNo || "invoiceNumber 입력필요"} `,
+        `${params.row.invoiceNo || "송장번호 기입"} `,
       valueSetter: (params: GridValueSetterParams) => {
         const invoiceNo = params.value;
+        console.log(invoiceNo);
         params.row["invoiceNo"] = invoiceNo;
         return { ...params.row };
       },
@@ -324,7 +326,7 @@ function App() {
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 25, page: 0 },
+                paginationModel: { pageSize: 25, page: 1 },
               },
             }}
           />
