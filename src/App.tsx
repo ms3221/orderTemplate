@@ -30,11 +30,27 @@ function App() {
       renderCell: (params) => (
         <>
           <div className="first_tap">
-            <div>{params.value.openmarket}</div>
-            <div>구매자 이름 : {params.row.orderName}</div>
-            <div>구매자 phone : {params.row.orderMemberTel}</div>
-            <div>수령자 이름 : {params.row.receiverName}</div>
-            <div>수령자 phone : {params.row.receiverPhone}</div>
+            <div
+              style={
+                params.row.openmarket === "coupang"
+                  ? { color: "tomato", fontWeight: "bold" }
+                  : {
+                      color: "green",
+                      fontWeight: "bold",
+                    }
+              }
+            >
+              [{params.row.openmarket}]
+            </div>
+            <div>
+              구매자 정보 : {params.row.orderName} / {params.row.orderMemberTel}
+            </div>
+
+            <div>
+              수령자 정보 : {params.row.receiverName} /{" "}
+              {params.row.receiverPhone}
+            </div>
+
             <div>개인통관번호 : {params.row.pcc}</div>
             <div>{params.row.productName}</div>
             <div>
@@ -56,7 +72,7 @@ function App() {
       field: "productOrderStatus",
       headerName: "상품상태",
       type: "string",
-      width: 200,
+      width: 300,
       editable: false,
       valueGetter: (params: GridValueGetterParams) =>
         `${params.row.productOrderStatus || "배송중"} `,
@@ -65,7 +81,7 @@ function App() {
       field: "invoiceNo",
       headerName: "송장번호",
       type: "string",
-      width: 300,
+      width: 350,
       editable: true,
       valueGetter: (params: GridValueGetterParams) =>
         `${params.row.invoiceNo || "송장번호 기입"} `,
@@ -277,6 +293,7 @@ function App() {
       setOpen({ result: "error", open: true, reason: "발송처리" });
     }
   }
+
   useEffect(() => {
     getOrderInfo();
   }, [open]);
@@ -318,17 +335,14 @@ function App() {
             onCellEditStop={(data) => {
               updateOrderInfo(data.row);
             }}
-            rowHeight={300}
+            rowHeight={350}
             // onCellClick={(params) => {
             //   handleClick(params);
             // }}
             rows={order}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 25, page: 1 },
-              },
-            }}
+            pagination
+            {...order}
           />
         </Box>
         <MuiSnackBar open={open} setOpen={setOpen} />

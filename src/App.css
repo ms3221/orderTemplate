@@ -49,8 +49,11 @@
 .first_tap {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  align-items: flex-start;
+  overflow-x: scroll;
 }
 
 .smartstore_btn {
