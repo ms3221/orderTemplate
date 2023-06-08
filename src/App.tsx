@@ -151,21 +151,24 @@ function App() {
               disabled={params.row.orderStatus === "DELIVERING" ? true : false}
               size="large"
               color={
-                params.row.productOrderStatus === "NEW_ORDER"
+                params.row.productOrderStatus === "NEW_ORDER" ||
+                params.row.productOrderStatus === "ACCEPT"
                   ? "primary"
                   : "warning"
               }
               variant="contained"
               style={{ marginLeft: 16 }}
               onClick={() => {
-                params.row.productOrderStatus === "NEW_ORDER"
+                params.row.productOrderStatus === "NEW_ORDER" ||
+                params.row.productOrderStatus === "ACCEPT"
                   ? confirmOrder(params.row)
                   : updateInvoiceNo(params.row);
               }}
             >
               {params.row.orderStatus === "DELIVERING"
                 ? "배송중"
-                : params.row.productOrderStatus === "NEW_ORDER"
+                : params.row.productOrderStatus === "NEW_ORDER" ||
+                  params.row.productOrderStatus === "ACCEPT"
                 ? "발주확인"
                 : "발송처리"}
             </Button>
@@ -274,9 +277,9 @@ function App() {
   async function confirmOrder(orderInfo: OrderResponse) {
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/smart-store/product-order-confirm`,
+        `${process.env.REACT_APP_API_URL}/openmarket/prepare_order`,
         {
-          productOrderIds: [orderInfo.productOrderNo],
+          order: orderInfo,
         }
       );
       setOpen({ result: "success", open: true, reason: "발송처리" });
@@ -310,9 +313,8 @@ function App() {
             style={{ margin: 16, fontSize: 30 }}
             onClick={getNewOrder}
           >
-            스마트 스토어 주문수집
+            스토어 주문수집
           </Button>
-
           {naverLogin ? (
             <Button
               color="warning"
