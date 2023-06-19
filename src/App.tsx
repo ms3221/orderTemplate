@@ -148,7 +148,12 @@ function App() {
         <>
           <strong>
             <Button
-              disabled={params.row.orderStatus === "DELIVERING" ? true : false}
+              disabled={
+                params.row.orderStatus === "DELIVERING" ||
+                params.row.orderStatus === "DEPARTURE"
+                  ? true
+                  : false
+              }
               size="large"
               color={
                 params.row.productOrderStatus === "NEW_ORDER" ||
