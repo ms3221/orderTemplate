@@ -245,7 +245,7 @@ function App() {
   async function updateInvoiceNo(orderInfo: OrderResponse) {
     try {
       const data = await axios.post(
-        `${process.env.REACT_APP_API_URL}/openmarkte/updateInvoiceno`,
+        `${process.env.REACT_APP_API_URL}/openmarket/updateInoviceNo`,
         {
           orderInfo,
         }
