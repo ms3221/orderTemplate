@@ -244,8 +244,11 @@ function App() {
 
   async function updateInvoiceNo(orderInfo: OrderResponse) {
     try {
-      const data = await axios.get(
-        `${process.env.REACT_APP_API_URL}/smart-store/productDispatch/${orderInfo.orderNo}/${orderInfo.invoiceNo}`
+      const data = await axios.post(
+        `${process.env.REACT_APP_API_URL}/openmarkte/updateInvoiceno`,
+        {
+          orderInfo,
+        }
       );
       setOpen({ result: "success", open: true, reason: "" });
     } catch (e: any) {
