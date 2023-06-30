@@ -226,7 +226,7 @@ function App() {
   async function getNewOrder() {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/smart-store/newOrder`
+        `${process.env.REACT_APP_API_URL}/openmarket/new_order`
       );
       setOpen({ result: "success", open: true, reason: "신규주문" });
     } catch (e) {
