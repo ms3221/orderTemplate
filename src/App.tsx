@@ -218,8 +218,10 @@ function App() {
       });
     axios
       .get(`${process.env.REACT_APP_API_URL}/smart-store/newOrder`)
-      .catch(() => {
-        setNaverLogin(true);
+      .then((res) => {
+        if (!res?.data.reason) {
+          setNaverLogin(true);
+        }
       });
   }
 
