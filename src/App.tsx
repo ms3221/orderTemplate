@@ -219,7 +219,7 @@ function App() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/smart-store/newOrder`)
       .then((res) => {
-        if (!res?.data.reason) {
+        if (res?.data.reason) {
           setNaverLogin(true);
         }
       });
