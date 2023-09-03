@@ -58,9 +58,17 @@ function App() {
               <span> / 수량: {params.row.orderQuantity}</span>
             </div>
             <div>
-              <a href={params.row.taobaoUrl} target="_blank" rel="noreferrer">
+              <a
+                href={params.row.taobaoUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{ marginRight: 30 }}
+              >
                 {" "}
                 타오바오 주문 URL
+              </a>
+              <a href={params.row.productId} target="_blank" rel="noreferrer">
+                판매중인 상품
               </a>
             </div>
           </div>
@@ -348,9 +356,6 @@ function App() {
               updateOrderInfo(data.row);
             }}
             rowHeight={350}
-            // onCellClick={(params) => {
-            //   handleClick(params);
-            // }}
             rows={order}
             columns={columns}
             pagination

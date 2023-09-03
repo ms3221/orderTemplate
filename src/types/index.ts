@@ -25,4 +25,5 @@ export interface OrderResponse {
   invoiceNo: null | string;
   payAmt: null | number;
   deliveryAmt: null | number;
+  productId: null | string;
 }
