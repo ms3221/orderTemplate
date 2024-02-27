@@ -15,6 +15,17 @@ import { Open } from "./types/muiSnakBar";
 import { DataGridPro } from "../node_modules/@mui/x-data-grid-pro/DataGridPro/DataGridPro";
 
 function App() {
+  const Status: any = {
+    DELIVERING: "배송중",
+    DELIVERED: "배송완료",
+    RETURNED: "환불",
+    CANCELED: "취소",
+    PURCHASE_DECIDED: "구매확정",
+  };
+  const returnStatusObj: any = {
+    RETURN_REJECT: "환불 거부",
+    RETURN_DONE: "환불 완료",
+  };
   const [open, setOpen] = useState<Open>({
     result: "",
     open: false,
@@ -82,8 +93,29 @@ function App() {
       type: "string",
       width: 300,
       editable: false,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.productOrderStatus || "배송중"} `,
+      renderCell: (params) => (
+        <>
+          <div
+            style={
+              params.row.productOrderStatus === "CANCELED" ||
+              params.row.productOrderStatus === "RETURNED"
+                ? { color: "tomato", fontWeight: "bold", fontSize: "40px" }
+                : {
+                    color: "green",
+                    fontWeight: "bold",
+                  }
+            }
+          >
+            {Status[params.row.productOrderStatus] ||
+              params.row.productOrderStatus}
+          </div>
+          <div>{returnStatusObj[params.row.returnStatus]}</div>
+        </>
+      ),
+      // valueGetter: (params: GridValueGetterParams) =>
+      //   `${
+      //     Status[params.row.productOrderStatus] || params.row.productOrderStatus
+      //   } `,
     },
     {
       field: "invoiceNo",
@@ -215,9 +247,47 @@ function App() {
         </>
       ),
     },
+    {
+      field: "주문 상태",
+      headerName: "주문 상태",
+      description: "주문 상태",
+      sortable: false,
+      width: 300,
+
+      renderCell: (params) => (
+        <>
+          <strong>
+            <Button
+              size="large"
+              color="primary"
+              variant="contained"
+              style={{ marginLeft: 16 }}
+              onClick={() => {
+                updateOrderStatusByProductOrderNo(params.row);
+              }}
+            >
+              주문 상태 업데이트
+            </Button>
+          </strong>
+        </>
+      ),
+    },
   ];
 
   const [order, setOrder] = useState<OrderResponse[]>([]);
+
+  async function updateOrderStatusByProductOrderNo(orderInfo: OrderResponse) {
+    try {
+      const data = await axios.put(
+        `${process.env.REACT_APP_API_URL}/smart-store/update/orderStatus`,
+        orderInfo
+      );
+      setOpen({ result: "success", open: true, reason: "" });
+    } catch (e: any) {
+      setOpen({ result: "error", open: true, reason: "" });
+      console.log(e.message);
+    }
+  }
   function getOrderInfo() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/smart-store/order`)
@@ -322,7 +392,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>슴무트수토우 주문 및 배송현황</h1>
+        <h1>스마트스토어 주문 및 배송현황</h1>
         <div className="smartstore_btn">
           <Button
             color="primary"
